@@ -46,7 +46,7 @@ this.createjs = this.createjs||{};
 	 * <strong>Notes:</strong>
 	 * <ol>
 	 * 	<li>When using a video source that may loop or seek, use a {{#crossLink "VideoBuffer"}}{{/crossLink}} object to
-	 * 	 blinking / flashing.
+	 * 	 prevent blinking / flashing.
 	 * 	<li>When a string path or image tag that is not yet loaded is used, the stage may need to be redrawn before it
 	 * 	 will be displayed.</li>
 	 * 	<li>Bitmaps with an SVG source currently will not respect an alpha value other than 0 or 1. To get around this,
@@ -92,6 +92,12 @@ this.createjs = this.createjs||{};
 		 * @default null
 		 */
 		this.sourceRect = null;
+
+	// private properties:
+		/**
+		 * Docced in superclass.
+		 */
+		this._webGLRenderStyle = createjs.DisplayObject._StageGL_BITMAP;
 	}
 	var p = createjs.extend(Bitmap, createjs.DisplayObject);
 	
@@ -197,10 +203,13 @@ this.createjs = this.createjs||{};
 	/**
 	 * Returns a clone of the Bitmap instance.
 	 * @method clone
+	 * @param {Boolean} node Whether the underlying dom element should be cloned as well.
 	 * @return {Bitmap} a clone of the Bitmap instance.
 	 **/
-	p.clone = function() {
-		var o = new Bitmap(this.image);
+	p.clone = function(node) {
+		var image = this.image;
+		if(image && node){ image = image.cloneNode(); }
+		var o = new Bitmap(image);
 		if (this.sourceRect) { o.sourceRect = this.sourceRect.clone(); }
 		this._cloneProps(o);
 		return o;

@@ -1,5 +1,5 @@
 /*
-* UID
+* VideoBuffer
 * Visit http://createjs.com/ for documentation, updates and examples.
 *
 * Copyright (c) 2010 gskinner.com, inc.
@@ -101,7 +101,7 @@ this.createjs = this.createjs||{};
 		if (this.readyState < 2) { return; }
 		var canvas=this._canvas, video = this._video;
 		if (!canvas) {
-			canvas = this._canvas = document.createElement("canvas");
+			canvas = this._canvas = createjs.createCanvas?createjs.createCanvas():document.createElement("canvas");
 			canvas.width = video.videoWidth;
 			canvas.height = video.videoHeight;
 		}
