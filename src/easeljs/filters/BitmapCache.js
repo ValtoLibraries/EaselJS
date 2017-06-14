@@ -197,19 +197,6 @@ this.createjs = this.createjs||{};
 	var p = BitmapCache.prototype;
 
 	/**
-	 * <strong>REMOVED</strong>. Removed in favor of using `MySuperClass_constructor`.
-	 * See {{#crossLink "Utility Methods/extend"}}{{/crossLink}} and {{#crossLink "Utility Methods/promote"}}{{/crossLink}}
-	 * for details.
-	 *
-	 * There is an inheritance tutorial distributed with EaselJS in /tutorials/Inheritance.
-	 *
-	 * @method initialize
-	 * @protected
-	 * @deprecated
-	 **/
-	// p.initialize = function() {}; // searchable for devs wondering where it is.
-
-	/**
 	 * Returns the bounds that surround all applied filters, relies on each filter to describe how it changes bounds.
 	 * @method getFilterBounds
 	 * @param {DisplayObject} target The object to check the filter bounds for.
@@ -409,8 +396,8 @@ this.createjs = this.createjs||{};
 	p.draw = function(ctx) {
 		if(!this.target) { return false; }
 		ctx.drawImage(this.target.cacheCanvas,
-			this.x + this._filterOffX,		this.y + this._filterOffY,
-			this.width,						this.height
+			this.x + (this._filterOffX/this.scale),		this.y + (this._filterOffY/this.scale),
+			this._drawWidth/this.scale,					this._drawHeight/this.scale
 		);
 		return true;
 	};
@@ -450,8 +437,8 @@ this.createjs = this.createjs||{};
 				this._webGLCache = this.target.stage;
 
 			} else if(this._options.useGL === "new") {
-				this.target.cacheCanvas = document.createElement("canvas");
-				this._webGLCache = new createjs.StageGL(this.target.cacheCanvas, {antialias: true, transparent: true});
+				this.target.cacheCanvas = document.createElement("canvas"); // we can turn off autopurge because we wont be making textures here
+				this._webGLCache = new createjs.StageGL(this.target.cacheCanvas, {antialias: true, transparent: true, autoPurge: -1});
 				this._webGLCache.isCacheControlled = true;	// use this flag to control stage sizing and final output
 
 			} else if(this._options.useGL instanceof createjs.StageGL) {
@@ -492,7 +479,6 @@ this.createjs = this.createjs||{};
 	 * @protected
 	 **/
 	p._drawToCache = function(compositeOperation) {
-
 		var surface = this.target.cacheCanvas;
 		var target = this.target;
 		var webGL = this._webGLCache;
@@ -515,9 +501,11 @@ this.createjs = this.createjs||{};
 
 			ctx.save();
 			ctx.globalCompositeOperation = compositeOperation;
-			ctx.setTransform(this.scale, 0, 0, this.scale, -this.offX, -this.offY);
+			ctx.setTransform(this.scale,0,0,this.scale, -this._filterOffX,-this._filterOffY);
+			ctx.translate(-this.x, -this.y);
 			target.draw(ctx, true);
 			ctx.restore();
+
 
 			if (target.filters && target.filters.length) {
 				this._applyFilters(ctx);
@@ -532,11 +520,10 @@ this.createjs = this.createjs||{};
 	 * @protected
 	 **/
 	p._applyFilters = function(ctx) {
-		var surface = this.target.cacheCanvas;
 		var filters = this.target.filters;
 
-		var w = surface.width;
-		var h = surface.height;
+		var w = this._drawWidth;
+		var h = this._drawHeight;
 
 		var data;
 
