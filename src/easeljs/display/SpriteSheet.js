@@ -369,6 +369,8 @@ this.createjs = this.createjs||{};
 	p._getAnimations = function() {
 		return this._animations.slice();
 	};
+	// SpriteSheet.getAnimations is @deprecated. Remove for 1.1+
+	p.getAnimations = createjs.deprecate(p._getAnimations, "SpriteSheet.getAnimations");
 
 	/**
 	 * Returns an array of all available animation names available on this sprite sheet as strings.
@@ -598,7 +600,7 @@ this.createjs = this.createjs||{};
 		
 		imgLoop:
 		for (var i=0, imgs=this._images; i<imgs.length; i++) {
-			var img = imgs[i], imgW = img.width, imgH = img.height;
+			var img = imgs[i], imgW = (img.width||img.naturalWidth), imgH = (img.height||img.naturalHeight);
 
 			var y = margin;
 			while (y <= imgH-margin-frameHeight) {
