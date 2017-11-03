@@ -1,4 +1,4 @@
-Version NEXT [Not Released]
+Version 1.0.0 (September 14, 2017)
 ****************************************************************************************************
 CRITICAL (may break existing content):
 - significant WebGL updates:
@@ -7,12 +7,12 @@ CRITICAL (may break existing content):
     * better performance, less content restrictions, more features, easier to use
 - Deprecated get/set methods are now protect with an underscore (eg _setEnabled)
 	The deprecated methods and properties will still work, but will display a console warning when used.
+- Changed version naming to use easeljs.js, instead of containing the version number
 
 *****
 OTHER:
 - add Ticker._pausedTime in Ticker.reset() (thanks @abouthiroppy)
 - fixed Rectangle.pad parameter docs. (thanks @ruslan-simonenko)
-- fixed error when drawing DOMElement with SpriteStage (thanks @thammin)
 - added a few missing APIs on FauxCanvas helper
 - added VideoBuffer helper class that preserves the previous frame until the next one is drawn
 - fixed an issue where accessing performance throws an error in node webkit

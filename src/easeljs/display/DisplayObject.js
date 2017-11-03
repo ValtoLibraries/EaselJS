@@ -706,7 +706,7 @@ this.createjs = this.createjs||{};
 	 * Set both the {{#crossLink "DisplayObject/scaleX:property"}}{{/crossLink}} and the {{#crossLink "DisplayObject/scaleY"}}{{/crossLink}}
 	 * property to the same value. Note that when you get the value, if the `scaleX` and `scaleY` are different values,
 	 * it will return only the `scaleX`.
-	 * @property scaleX
+	 * @property scale
 	 * @type {Number}
 	 * @default 1
 	 */
@@ -719,7 +719,7 @@ this.createjs = this.createjs||{};
 			},
 			scale: {
 				get: function() { return this.scaleX; },
-				set: function(scale) { this.scaleX = this.scaleY = scale; },
+				set: function(scale) { this.scaleX = this.scaleY = scale; }
 			}
 		});
 	} catch (e) {}
@@ -1144,10 +1144,9 @@ this.createjs = this.createjs||{};
 	 **/
 	p.getBounds = function() {
 		if (this._bounds) { return this._rectangle.copy(this._bounds); }
-		var cacheCanvas = this.cacheCanvas;
-		if (cacheCanvas) {
-			var scale = this._cacheScale;
-			return this._rectangle.setValues(this._cacheOffsetX, this._cacheOffsetY, cacheCanvas.width/scale, cacheCanvas.height/scale);
+		var cache = this.bitmapCache;
+		if (cache) {
+			return cache.getBounds();
 		}
 		return null;
 	};
